@@ -27,3 +27,5 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## refer  https://github.com/surmon-china/vue-quill-editor/blob/master/src/editor.vue
