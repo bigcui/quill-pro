@@ -8,7 +8,6 @@
 <script>
 // require sources
 import _Quill from "quill";
-
 const Quill = window.Quill || _Quill;
 const defaultOptions = {
     theme: "snow",
