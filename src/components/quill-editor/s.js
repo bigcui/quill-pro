@@ -1,0 +1,327 @@
+let ss = [{
+    "name": "基本信息",
+    "code": "2",
+    "children": [{
+        "name": "省份",
+        "code": "province",
+        "children": null
+    }, {
+        "name": "生日",
+        "code": "birthday",
+        "children": null
+    }, {
+        "name": "地址",
+        "code": "address",
+        "children": null
+    }, {
+        "name": "职业",
+        "code": "profession",
+        "children": null
+    }, {
+        "name": "姓名",
+        "code": "name",
+        "children": null
+    }, {
+        "name": "性别",
+        "code": "gender",
+        "children": null
+    }, {
+        "name": "参与活动",
+        "code": "participate_activity_detail",
+        "children": null
+    }, {
+        "name": "潜客来源",
+        "code": "source_type_detail",
+        "children": null
+    }]
+}, {
+    "name": "微信信息",
+    "code": "3",
+    "children": [{
+        "name": "微信昵称",
+        "code": "nickname",
+        "children": null
+    }]
+}, {
+    "name": "线索信息",
+    "code": "5",
+    "children": [{
+        "name": "线索来源",
+        "code": "leadsSource",
+        "children": null
+    }, {
+        "name": "培育状态",
+        "code": "nurtureState",
+        "children": null
+    }, {
+        "name": "线索创建时间",
+        "code": "collectTime",
+        "children": null
+    }, {
+        "name": "分配状态",
+        "code": "hasOwner",
+        "children": null
+    }, {
+        "name": "线索状态",
+        "code": "potCustStatus",
+        "children": null
+    }, {
+        "name": "线索池",
+        "code": "leadsPool",
+        "children": null
+    }, {
+        "name": "备注",
+        "code": "remark",
+        "children": null
+    }, {
+        "name": "入池方式",
+        "code": "entryWay",
+        "children": null
+    }, {
+        "name": "微信号",
+        "code": "wechatNumber",
+        "children": null
+    }, {
+        "name": "企业潜客挖掘",
+        "code": "opptyFlag",
+        "children": null
+    }, {
+        "name": "lxl下拉多选",
+        "code": "col_dynamic_magic_varchar200_0",
+        "children": null
+    }, {
+        "name": "日期赫",
+        "code": "col_dynamic_magic_bigint_1",
+        "children": null
+    }, {
+        "name": "lxl下拉多选",
+        "code": "col_dynamic_magic_varchar200_1",
+        "children": null
+    }, {
+        "name": "下拉多选",
+        "code": "col_dynamic_magic_varchar200_2",
+        "children": null
+    }, {
+        "name": "来自哪里",
+        "code": "col_dynamic_magic_varchar30_12",
+        "children": null
+    }, {
+        "name": "sz测试",
+        "code": "col_dynamic_magic_varchar30_11",
+        "children": null
+    }, {
+        "name": "lxl单选按钮",
+        "code": "col_dynamic_magic_varchar10_0",
+        "children": null
+    }, {
+        "name": "第一次测试",
+        "code": "col_dynamic_magic_varchar30_14",
+        "children": null
+    }, {
+        "name": "lxl下拉单选",
+        "code": "col_dynamic_magic_varchar10_1",
+        "children": null
+    }, {
+        "name": "测试映射",
+        "code": "col_dynamic_magic_varchar30_13",
+        "children": null
+    }, {
+        "name": "userId",
+        "code": "col_dynamic_magic_varchar30_1",
+        "children": null
+    }, {
+        "name": "lxl单行文本",
+        "code": "col_dynamic_magic_varchar30_0",
+        "children": null
+    }, {
+        "name": "haha",
+        "code": "col_dynamic_magic_varchar200_19",
+        "children": null
+    }, {
+        "name": "多行文本赫",
+        "code": "col_dynamic_magic_varchar200_18",
+        "children": null
+    }, {
+        "name": "多选赫",
+        "code": "col_dynamic_magic_varchar200_17",
+        "children": null
+    }, {
+        "name": "榴莲多行文本",
+        "code": "col_dynamic_magic_varchar200_16",
+        "children": null
+    }, {
+        "name": "榴莲0601新增",
+        "code": "col_dynamic_magic_varchar200_15",
+        "children": null
+    }, {
+        "name": "参与的活动",
+        "code": "col_dynamic_magic_varchar200_14",
+        "children": null
+    }, {
+        "name": "28新增",
+        "code": "col_dynamic_magic_varchar200_13",
+        "children": null
+    }, {
+        "name": "参与的活动",
+        "code": "col_dynamic_magic_varchar200_12",
+        "children": null
+    }, {
+        "name": "28新增",
+        "code": "col_dynamic_magic_varchar200_11",
+        "children": null
+    }, {
+        "name": "多选按钮",
+        "code": "col_dynamic_magic_varchar200_10",
+        "children": null
+    }, {
+        "name": "0721lxl",
+        "code": "col_dynamic_magic_varchar10_12",
+        "children": null
+    }, {
+        "name": "您的身份",
+        "code": "col_dynamic_magic_varchar10_10",
+        "children": null
+    }, {
+        "name": "身高",
+        "code": "col_dynamic_magic_decimal_1",
+        "children": null
+    }]
+}, {
+    "name": "企业微信",
+    "code": "18",
+    "children": [{
+        "name": "是否为企微客户",
+        "code": "enterpriseWxFlag",
+        "children": null
+    }, {
+        "name": "所属销售",
+        "code": "enterpriseWxUserID",
+        "children": null
+    }, {
+        "name": "客户名称",
+        "code": "enterpriseWxName",
+        "children": null
+    }, {
+        "name": "客户类型",
+        "code": "enterpriseWxType",
+        "children": null
+    }, {
+        "name": "客户企业简称",
+        "code": "corpName",
+        "children": null
+    }, {
+        "name": "客户企业名称",
+        "code": "corpFullName",
+        "children": null
+    }, {
+        "name": "客户职位",
+        "code": "enterpriseWxPosition",
+        "children": null
+    }, {
+        "name": "客户备注",
+        "code": "enterpriseWxRemark",
+        "children": null
+    }, {
+        "name": "客户备注公司",
+        "code": "enterpriseWxRemarkCorpName",
+        "children": null
+    }]
+}, {
+    "name": "身份信息",
+    "code": "26",
+    "children": [{
+        "name": "微信UnionId",
+        "code": "union_id",
+        "children": null
+    }, {
+        "name": "手机号",
+        "code": "phone",
+        "children": null
+    }, {
+        "name": "线索Id",
+        "code": "leads_id",
+        "children": null
+    }, {
+        "name": "微信OpenId",
+        "code": "open_id",
+        "children": null
+    }, {
+        "name": "邮箱",
+        "code": "email",
+        "children": null
+    }, {
+        "name": "QQ",
+        "code": "qq",
+        "children": null
+    }, {
+        "name": "座机",
+        "code": "fixed_phone",
+        "children": null
+    }, {
+        "name": "神策Id",
+        "code": "distinct_id",
+        "children": null
+    }, {
+        "name": "企微userId",
+        "code": "external_userid",
+        "children": null
+    }, {
+        "name": "自用CrmId",
+        "code": "own_crm_id",
+        "children": null
+    }, {
+        "name": "抖音OpenId",
+        "code": "dy_open_id",
+        "children": null
+    }, {
+        "name": "百度小程序OpenId",
+        "code": "smart_program_open_id",
+        "children": null
+    }]
+}, {
+    "name": "自有系统",
+    "code": "28",
+    "children": [{
+        "name": "32621050lxl_0804_01_更新字符串_toc",
+        "code": "32621050_lxl_0804_01",
+        "children": null
+    }, {
+        "name": "32621050lxl_0804_02_更新数值_toc",
+        "code": "32621050_lxl_0804_02",
+        "children": null
+    }, {
+        "name": "32621050lxl_0804_03_更新多值_toc",
+        "code": "32621050_lxl_0804_03",
+        "children": null
+    }, {
+        "name": "抖音昵称",
+        "code": "dyNickname",
+        "children": null
+    }, {
+        "name": "是否抖音粉丝",
+        "code": "dyFlag",
+        "children": null
+    }]
+}]
+
+let getName = (list, value) => {
+    let result = '';
+    function getValo2 (list,  value){
+        for(var k=0; k < list.length; k++) {
+            var el = list[k];
+           if (el.code === value) {
+               result = el.name;
+               break;
+           }else {
+               if (el.children) {
+                   getValo2(el.children, value);
+               }
+            }
+        }
+        return result;
+    }
+
+    return getValo2(ss,'province')
+};
+
+ let test = getName(ss,'province'); console.log(test,'---');
