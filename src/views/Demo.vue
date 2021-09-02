@@ -14,7 +14,7 @@
 
 <script>
 import { Quill, quillEditor, Popper } from '@/components/quill-editor/index.js';
-import { addEventPopper} from '@/components/quill-editor/util';
+import { addEventPopper, css} from '@/components/quill-editor/util';
 import Vue from "vue";
 let getName = (list, value) => {
     let result = '';
@@ -127,15 +127,9 @@ export default {
                     let popperJSmode = null;
                     // 关闭所有
                     selectDiv.onclick = ()=> {
-                         document.querySelectorAll('.el-cascader__dropdown').forEach(
-                            el => {
-                                el.style.display = 'none';
-                            }
-                        );
-                        selectWraperALL.style.display = 'block';
-                        setTimeout(()=>{
-                           eventHub.$emit('updatepopperJS', 'dd')
-                        },100);
+                        eventHub.$emit('updatepopperJS');
+                        let status = css(selectWraperALL, 'display');
+                        css(selectWraperALL, 'display', status === 'none' ? 'block' : 'none');
                     };
                     /**
                      * 1 回填数据 展开弹窗 显示选中的数据
@@ -231,7 +225,6 @@ export default {
                                     })
                                 }
                                 setTimeout(()=>{
-                                    
                                     eventHub.$emit('updatepopperJS', 'dd')
                                 })
                             };
@@ -276,10 +269,10 @@ export default {
                     node.setAttribute('max-width', '100%');
                     addEventPopper(node, () => {
 
-                        // setTimeout(()=> {
-                        //     selectWraperALL.style.display = 'none';
-                        //     this.popperJS && this.popperJS.destroy();
-                        // })
+                        setTimeout(()=> {
+                            selectWraperALL.style.display = 'none';
+                            popperJSmode && popperJSmode.destroy();
+                        });
                     });
                     return node;
                 }
@@ -298,8 +291,7 @@ export default {
                         code: node.getAttribute('code'),
                         width: node.getAttribute('width'),
                         maxWidth: node.getAttribute('max-width'),
-                        list: list,
-                        type: 2
+                        list: list
                     };
                 }
             }
@@ -732,9 +724,19 @@ export default {
 };
 </script>
 
+<style lang="less">
+.ql-editor {
+    font-size: 14px!important;
+    font-weight: 400;
+    line-height: 26px!important;
+    word-break: break-all;
+    color: #606266;
+}
+</style>
 <style lang="less" scoped>
+
 /deep/ .select-input-value {
-    display: inline-block !important;
+    display: -webkit-inline-box;
     overflow: hidden;
     width: 160px;
     border: 0;
@@ -753,7 +755,7 @@ export default {
         white-space:nowrap; //不换行
     }
     .input-wraper {
-        // display: inline-flex;
+         display: inline-flex;
     }
     .input-inner {
         text-align: left;
@@ -790,6 +792,14 @@ export default {
     }
     .el-cascader__dropdown {
         display: none;
+        z-index: 111;
+        margin: 5px 0;
+        font-size: 14px;
+        background: #fff;
+        border: 1px solid #e4e7ed;
+        border-radius: 4px;
+        -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+        box-shadow: 0 2px 12px 0 rgba(0,0,0,.1)
     }
     .el-cascader-panel {
         display: -webkit-box;
