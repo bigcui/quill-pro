@@ -13,28 +13,9 @@
 </template>
 
 <script>
-import { Quill, quillEditor, Popper } from '@/components/quill-editor/index.js';
-import { addEventPopper, css} from '@/components/quill-editor/util';
-import Vue from "vue";
-let getName = (list, value) => {
-    let result = '';
-    function getValo2(list, value) {
-        for (var k = 0; k < list.length; k++) {
-            var el = list[k];
-            if (el.code === value) {
-                result = el.name;
-                break;
-            } else {
-                if (el.children) {
-                    getValo2(el.children, value);
-                }
-            }
-        }
-        return result;
-    }
-    return getValo2(list, value);
-};
-let eventHub = new Vue();
+import { Quill, quillEditor} from '@/components/quill-editor/index.js';
+import SelfSelect from '@/components/quill-editor/quill-select';
+
 export default {
     components: {
         quillEditor
@@ -86,194 +67,17 @@ export default {
         },
         addSelectAttr() {
             let BlockEmbed = Quill.imports['blots/embed'];
-            let popperFn = (electDiv, selectWraperALL, obj = {}) => {
-                 if (this.popperJS) return;
-                 this.popperJS = new Popper(electDiv, selectWraperALL,  obj);
-                 this.popperJS.onCreate(_ => {
-                    this.popperJS.update();
-                });
-            };
-            let popperFnUpdate = ()=> {
-                if (!this.popperJS) {
-                    popperFn();
-                }
-                else {
-                    this.popperJS.update();
-                }
-            };
-            let that = this;
             class SelectBlot extends BlockEmbed {
                 static create(value) {
                     let node = super.create();
-                    let levelIndex = 0;
-                    let input = document.createElement('span');
-                    let inputData = document.createElement('e');
-                    let selectDiv = document.createElement('div');
-                    let selectWraperALL = document.createElement('div'); // 所有下拉包
-                    let elCascaderpanel = document.createElement('div');
-                    let selectTxt = document.createElement('div');
-                    input.className = 'input-inner';
-                    selectTxt.className = 'input-wraper';
-                    elCascaderpanel.className = 'el-cascader-panel';
-                    selectWraperALL.className = 'el-cascader__dropdown';
-                    selectDiv.className = 'select-input-value';
-                    inputData.className = 'data-list-wraper';
-                    inputData.innerHTML = JSON.stringify(value.list);
-                    selectDiv.appendChild(inputData);
-                    selectTxt.appendChild(input);
-                    selectDiv.appendChild(selectTxt);
-                    input.innerText = '请选择';
-                    node.appendChild(selectDiv);
-                    let popperJSmode = null;
-                    // 关闭所有
-                    selectDiv.onclick = ()=> {
-                        eventHub.$emit('updatepopperJS');
-                        let status = css(selectWraperALL, 'display');
-                        css(selectWraperALL, 'display', status === 'none' ? 'block' : 'none');
-                    };
-                    /**
-                     * 1 回填数据 展开弹窗 显示选中的数据
-                     */
-                    let activedCode = '';
-                    let selectVavList = value.value.split('/');
-                    let str = [];
-                    selectVavList.forEach(el => {
-                        str.push(getName(value.list, el));
-                    });
-                    input.innerText = str.length > 1 ? str.join('/') : str.join('');
-                    const PanelArr = document.createElement('div');
-                    // level 指定output下一级
-                    let createPanel = (list, level) => {
-                        levelIndex++;
-                        if (level) {
-                            levelIndex = level;
-                        }
-                        let ul = document.createElement('ul');
-                        let len = list || [];
-                        let selectWraper = document.createElement('div');
-                        let selectDropDown = document.createElement('div');
-                        ul.className = 'el-scrollbar__view el-cascader-menu__list';
-                        selectWraper.className = 'el-scrollbar el-cascader-menu';
-                        selectDropDown.className = 'el-cascader-menu__wrap el-scrollbar__wrap';
-
-                        for (let i = 0; i < len.length; i++) {
-                            let keyData = len[i];
-                            let li = document.createElement('li');
-                            let span = document.createElement('span');
-                            span.innerHTML = keyData.name;
-                            span.className = 'el-cascader-node__label';
-                            li.setAttribute('code', keyData.code);
-                            li.setAttribute('level', levelIndex);
-                            li.appendChild(span);
-                            li.className = 'el-cascader-node';
-                            if (Object.keys(keyData.children || []).length) {
-                                let after = document.createElement('i');
-                                after.className = 'el-icon-check el-cascader-node__prefix';
-                                li.appendChild(after);
-                            }
-                            if (selectVavList.includes(keyData.code)) {
-                                li.classList.add('in-active-path');
-                            }
-                            // 历史数据回填
-                            if (value.value && selectVavList.length) {
-                                activedCode = selectVavList[levelIndex - 1];
-                                if (keyData.code === activedCode) {
-                                    let subList = list.find(el => el.code == activedCode);
-                                    // 二级回填 自动展开
-                                    if (subList.children && subList.children.length && selectVavList.length > 1) {
-                                        Promise.resolve(1).then(() => {
-                                            createPanel(subList.children);
-                                        });
-                                    }
-                                }
-                            }
-                            li.onclick = function() {
-                                // clear当前
-                                ul.children.forEach(el => {
-                                    el.classList.remove('in-active-path');
-                                });
-                                li.classList.add('in-active-path');
-                                if (Object.keys(keyData.children || []).length) {
-                                    // 点击的时候需要判断 是右侧更新数据 还是在右侧创建panel？看levelIndex是
-                            // 是否比自己大
-                                    createPanel(keyData.children, +li.getAttribute('level') + 1);
-                                    setTimeout(()=>{
-                                         eventHub.$emit('updatepopperJS', 'dd')
-                                    },100)
-                                } else {
-                                    value.value = this.innerText;
-                                    let selectVal = [];
-                                    let selectCode = [];
-                                    let thisLevel = +li.getAttribute('level');
-                                    if (thisLevel < levelIndex) {
-                                        for (let l = elCascaderpanel.children.length; l>=0; l--) {
-                                        // debugger
-                                            if (l > (levelIndex - thisLevel)) {
-                                                elCascaderpanel.children[l] && elCascaderpanel.removeChild(elCascaderpanel.children[l]);
-                                            }
-                                        }
-                                    }
-                                    Promise.resolve(1).then(()=>{
-                                        selectWraperALL.querySelectorAll('.in-active-path').forEach(el => {
-                                            selectVal.push(el.innerText);
-                                            selectCode.push(el.getAttribute('code'));
-                                        });
-                                        input.innerText = selectVal.join('/');
-                                        node.setAttribute('value', selectCode.join('/'));
-                                        selectWraperALL.style.display = 'none';
-                                        this.popperJS && this.popperJS.destroy();
-                                    })
-                                }
-                                setTimeout(()=>{
-                                    eventHub.$emit('updatepopperJS', 'dd')
-                                })
-                            };
-                            ul.append(li);
-                        }
-                        selectDropDown.appendChild(ul);
-                        //创建下级子节点
-                        if (level) {
-                            elCascaderpanel.childNodes[level - 1] && elCascaderpanel.removeChild(elCascaderpanel.childNodes[level - 1]);
-                        }
-                        // 删除创建 当前elCascaderpanel.childNodes.length 大于 levelIndex的 节点clear掉
-                        // if (elCascaderpanel && elCascaderpanel.childNodes.length > 1) {
-                        //     levelIndex--;
-                        //     // 删除当前层级的历史数据 重新创建
-                        //     elCascaderpanel.removeChild(elCascaderpanel.childNodes[levelIndex - 1]);
-                        // }
-                        for (let l = elCascaderpanel.children.length; l>=0; l--) {
-                            // debugger
-                            if (l > levelIndex-2) {
-                                elCascaderpanel.children[l] && elCascaderpanel.removeChild(elCascaderpanel.children[l]);
-                            }
-                        }
-                        selectWraper.appendChild(selectDropDown);
-                        elCascaderpanel.appendChild(selectWraper);
-                        console.log('levelIndex', levelIndex,elCascaderpanel.children.length);
-                    };
-                    popperJSmode = new Popper(selectDiv, selectWraperALL, {});
-                    popperJSmode.onCreate(_ => {
-                        popperJSmode.update();
-                    });
-                    eventHub.$on('updatepopperJS', _ =>{
-                        popperJSmode.update();
-                     });
-                    createPanel(value.list);
-                    selectWraperALL.appendChild(elCascaderpanel);
-                    node.appendChild(selectWraperALL);
                     node.className = 'el-cascader';
                     node.setAttribute('value', value.value || '');
                     node.setAttribute('code', value.value || '');
                     node.setAttribute('width', value.width || '100%');
                     node.setAttribute('max-width', '100%');
-                    node.setAttribute('max-width', '100%');
-                    addEventPopper(node, () => {
-
-                        setTimeout(()=> {
-                            selectWraperALL.style.display = 'none';
-                            popperJSmode && popperJSmode.destroy();
-                        });
-                    });
+                    new SelfSelect(node, value);
+                    // node.appendChild(input);
+                    // node.appendChild(ops);
                     return node;
                 }
                 static value(node) {
@@ -312,21 +116,19 @@ export default {
                 "children": [{
                     "name": "省份",
                     "code": "province",
-                    "children":[
-                            {
-                            "name": "s地址",
-                            "code": "address",
-                            "children": null
-                        }, {
-                            "name": "s职业",
-                            "code": "profession",
-                            "children": null
-                        }, {
-                            "name": "s姓名",
-                            "code": "name",
-                            "children": null
-                        }
-                    ]
+                    "children": [{
+                        "name": "s地址",
+                        "code": "address",
+                        "children": null
+                    }, {
+                        "name": "s职业",
+                        "code": "profession",
+                        "children": null
+                    }, {
+                        "name": "s姓名",
+                        "code": "name",
+                        "children": null
+                    }]
                 }, {
                     "name": "生日",
                     "code": "birthday",
@@ -726,15 +528,15 @@ export default {
 
 <style lang="less">
 .ql-editor {
-    font-size: 14px!important;
+    font-size: 14px !important;
     font-weight: 400;
-    line-height: 26px!important;
+    line-height: 26px !important;
     word-break: break-all;
     color: #606266;
 }
 </style>
-<style lang="less" scoped>
 
+<style lang="less" scoped>
 /deep/ .select-input-value {
     display: -webkit-inline-box;
     overflow: hidden;
@@ -750,26 +552,26 @@ export default {
         display: inline-block;
         padding: 0 10px;
         width: 140px;
-        overflow:hidden; //超出的文本隐藏
-        text-overflow:ellipsis; //用省略号显示
-        white-space:nowrap; //不换行
+        overflow: hidden; //超出的文本隐藏
+        text-overflow: ellipsis; //用省略号显示
+        white-space: nowrap; //不换行
     }
     .input-wraper {
-         display: inline-flex;
+        display: inline-flex;
     }
     .input-inner {
         text-align: left;
         display: inline-block !important;
         &:empty::before {
-          content: "在这里输入.";
-          color: #999999;
-          line-height: 1.5;
-          font-size: 14px;
+            content: "在这里输入.";
+            color: #999999;
+            line-height: 1.5;
+            font-size: 14px;
         }
-        &:focus:before{
-          content:none;
+        &:focus:before {
+            content: none;
         }
-      }
+    }
     .data-list-wraper {
         display: none;
     }
@@ -786,7 +588,7 @@ export default {
     position: relative;
     line-height: 40px;
     margin: 0 3px;
-    span[contenteditable=false]{
+    span[contenteditable=false] {
         // display: block;
         // height: 40px;
     }
@@ -798,8 +600,8 @@ export default {
         background: #fff;
         border: 1px solid #e4e7ed;
         border-radius: 4px;
-        -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-        box-shadow: 0 2px 12px 0 rgba(0,0,0,.1)
+        -webkit-box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1)
     }
     .el-cascader-panel {
         display: -webkit-box;
