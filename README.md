@@ -2,7 +2,7 @@
  寻遍全网找不到富文本插入下拉框的组件而不得
  自己mock下element ui的多级下拉组件 简单实现如下
  多级下拉框效果图如下
-![image](https://github.com/bigcui/quill-pro/tree/main/src/assets/select.png)
+![image](https://github.com/bigcui/quill-pro/raw/main/src/assets/select.png)
 ## Project setup
 ```
 npm install
