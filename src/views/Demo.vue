@@ -5,7 +5,7 @@
             <button class="ql-italic">字体</button>
             <button style="margin-right:20px;" @click="insertIMG('https://biz-crm-wechat-applet.cdn.bcebos.com/biz-crm-wechat-applet/generic/32621050/yoda/companyproduct/2021-08-05/c7b9630576ad461190395c8f0fe64662.jpeg')">image</button>
             <button @click="insertLinks('https://biz-crm-wechat-applet.cdn.bcebos.com', '链接')">link</button>
-            <button style="margin-left:20px;" @click="insertSeclect">insertSeclect</button>
+            <button style="margin-left:20px;width:130px" @click="insertSeclect" >插入下拉框组件</button>
         </div>
         <quill-editor ref="myQuillEditor" class="myQuillEditor" :content="content" :options="editorOption" @change="onEditorChange" @focus="onEditorFocus" @blur="onEditorBlur">
         </quill-editor>
@@ -541,12 +541,39 @@ export default {
     display: -webkit-inline-box;
     overflow: hidden;
     width: 160px;
-    border: 0;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
     height: 40px;
     line-height: 40px;
     color: #303133;
     background: #f5f5f5;
     cursor: pointer;
+    i{
+        display: block;
+        width: 14px;
+        height: 14px;
+        margin-top:13px;
+        transition: transform .3s;
+        &::after{
+        display: block;
+        width: 14px;
+        height: 14px;
+        transform:rotate(90deg);
+        -ms-transform:rotate(90deg); 	/* IE 9 */
+        -moz-transform:rotate(90deg); 	/* Firefox */
+        -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
+        -o-transform:rotate(90deg);
+        content: '';
+        background: url(../assets/arrow.png) no-repeat center;
+        background-size: 14px ;
+    }
+    }
+    .is-reverse {
+        transform: rotate(180deg);
+    }
+    &.is-focus {
+        border: 1px solid #409eff;
+    }
     span {
         line-height: 40px;
         display: inline-block;
@@ -591,6 +618,11 @@ export default {
     span[contenteditable=false] {
         // display: block;
         // height: 40px;
+    }
+    li {
+        &::before {
+            content:'';
+        }
     }
     .el-cascader__dropdown {
         display: none;
@@ -755,13 +787,19 @@ export default {
         color: #c0c4cc;
         cursor: not-allowed
     }
+    .el-icon-check {
+        width:14px ;
+        height:14px;
+    }
     .el-cascader-node__prefix {
         position: absolute;
         left: 10px
     }
     .el-cascader-node__postfix {
         position: absolute;
-        right: 10px
+        right: 10px;
+        background: url(../assets/arrow.png) no-repeat center;
+        background-size: 13px;
     }
     .el-cascader-node__label {
         -webkit-box-flex: 1;

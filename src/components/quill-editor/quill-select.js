@@ -5,14 +5,18 @@
  */
 
 // level 指定output下一级
-import { addEventPopper, css, getName } from '@/components/quill-editor/util';
+import {
+    addEventPopper,
+    css,
+    getName
+} from '@/components/quill-editor/util';
 import Popper from './popper'
 import Vue from "vue";
 let eventHub = new Vue();
 class SelfSelect {
-    constructor(ParentNode, data, placeHolder){
+    constructor(ParentNode, data, placeHolder) {
         this.value = data.value;
-        this.placeHolder= placeHolder;
+        this.placeHolder = placeHolder;
         this.list = data.list || [];
         this.selectVavList = this.value.split('/');
         this.ParentNode = ParentNode;
@@ -30,13 +34,9 @@ class SelfSelect {
         this.createSelectInput()
         this.createPanel()
         this.ParentNode.appendChild(this.selectDiv);
-            this.ParentNode.appendChild(this.selectWraperALL);
-        Promise.resolve('SelfSelect mode done').then( e=> {
-            
-            console.log(e);
-        });
+        this.ParentNode.appendChild(this.selectWraperALL);
     }
-    bindClick(dom, callback){
+    bindClick(dom, callback) {
         dom.onclick = (e) => {
             callback && callback.call(e)
         };
@@ -44,18 +44,34 @@ class SelfSelect {
     createSelectInput() {
         let inputData = document.createElement('e'); // 数据区
         let selectTxt = document.createElement('div');
+        let selectArrow = document.createElement('i');
+        selectArrow.className='el-input__icon';
         selectTxt.className = 'input-wraper';
         inputData.className = 'data-list-wraper';
         inputData.innerHTML = JSON.stringify(this.list);
         this.selectDiv.appendChild(inputData);
         selectTxt.appendChild(this.input);
         this.selectDiv.appendChild(selectTxt);
+        this.selectDiv.appendChild(selectArrow);
         // 初始化数据input value
         this.resetInputValue(this.input);
         this.bindClick(this.selectDiv, () => {
             eventHub.$emit('updatepopperJS');
+            this.selectDiv.classList.add('is-focus');
+            if (selectArrow.className.includes('is-reverse')){
+                selectArrow.classList.remove('is-reverse');
+            }
+            else {
+                selectArrow.classList.add('is-reverse');
+            }
             let status = css(this.selectWraperALL, 'display');
             css(this.selectWraperALL, 'display', status === 'none' ? 'block' : 'none');
+            if(status === 'none') {
+                this.selectDiv.classList.add('is-focus');
+            }
+            else {
+                this.selectDiv.classList.remove('is-focus');
+            }
         });
     }
     // 动态level 创建指定level
@@ -66,8 +82,8 @@ class SelfSelect {
         let selectDropDown = document.createElement('div');
         ul.className = 'el-scrollbar__view el-cascader-menu__list';
         selectWraper.className = 'el-scrollbar el-cascader-menu';
-        selectDropDown.className = 'el-cascader-menu__wrap el-scrollbar__wrap';
-        +this.levelIndex++;
+        selectDropDown.className = 'el-cascader-menu__wrap el-scrollbar__wrap'; +
+        this.levelIndex++;
         if (level) {
             this.levelIndex = level;
         }
@@ -77,7 +93,7 @@ class SelfSelect {
             createLi.call(this, li, keyData);
             this.liBindEvent(keyData, li, ul);
             // 历史数据回填
-            this.resetOptionValue(list,keyData);
+            this.resetOptionValue(list, keyData);
             ul.append(li);
         }
         selectDropDown.appendChild(ul);
@@ -85,7 +101,8 @@ class SelfSelect {
         clearHistoryPanel.call(this);
         this.elCascaderpanel.appendChild(selectWraper);
         this.selectWraperALL.appendChild(this.elCascaderpanel);
-        function clearHistoryPanel(){
+
+        function clearHistoryPanel() {
             //场景1 创建当前指定子节点 clear历史节点
             if (level) {
                 this.elCascaderpanel.childNodes[level - 1] && this.elCascaderpanel.removeChild(this.elCascaderpanel.childNodes[level - 1]);
@@ -97,6 +114,7 @@ class SelfSelect {
                 }
             }
         }
+
         function createLi(li, keyData) {
             let span = document.createElement('span');
             span.innerHTML = keyData.name;
@@ -107,7 +125,7 @@ class SelfSelect {
             li.className = 'el-cascader-node';
             if (Object.keys(keyData.children || []).length) {
                 let after = document.createElement('i');
-                after.className = 'el-icon-check el-cascader-node__prefix';
+                after.className = 'el-icon-check el-cascader-node__postfix';
                 li.appendChild(after);
             }
             if (this.selectVavList.includes(keyData.code)) {
@@ -115,7 +133,7 @@ class SelfSelect {
             }
         }
     }
-    resetOptionValue(list = this.list,keyData) {
+    resetOptionValue(list = this.list, keyData) {
         if (this.selectVavList.length) {
             let activedCode = this.selectVavList[this.levelIndex - 1];
             if (keyData.code === activedCode) {
@@ -160,7 +178,7 @@ class SelfSelect {
             if (Object.keys(keyData.children || []).length) {
                 // 点击的时候需要判断 是右侧更新数据 还是在右侧创建panel？看levelIndex是
                 // 是否比自己大
-               this.createPanel(keyData.children, +li.getAttribute('level') + 1);
+                this.createPanel(keyData.children, +li.getAttribute('level') + 1);
             } else {
                 setSelectPach();
                 this.selectWraperALL.style.display = 'none';
@@ -179,7 +197,9 @@ class SelfSelect {
         dom.innerText = str.length > 1 ? str.join('/') : str.join('')
     }
     initPopper() {
-        this.popperJSmode = new Popper(this.selectDiv, this.selectWraperALL, {});
+        this.popperJSmode = new Popper(this.selectDiv, this.selectWraperALL, {
+            placement: 'bottom-start'
+        });
         this.popperJSmode.onCreate(_ => {
             this.popperJSmode.update();
         });
@@ -189,6 +209,7 @@ class SelfSelect {
         addEventPopper(this.ParentNode, () => {
             setTimeout(() => {
                 this.selectWraperALL.style.display = 'none';
+                this.selectDiv.classList.remove('is-focus');
             });
         });
     }
