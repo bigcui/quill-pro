@@ -15,7 +15,7 @@ import Vue from "vue";
 let eventHub = new Vue();
 class SelfSelect {
     constructor(ParentNode, data, placeHolder) {
-        this.value = data.value;
+        this.value = data.value || '';
         this.placeHolder = placeHolder;
         this.list = data.list || [];
         this.selectVavList = this.value.split('/');
@@ -42,14 +42,10 @@ class SelfSelect {
         };
     }
     createSelectInput() {
-        let inputData = document.createElement('e'); // 数据区
         let selectTxt = document.createElement('div');
         let selectArrow = document.createElement('i');
         selectArrow.className='el-input__icon';
         selectTxt.className = 'input-wraper';
-        inputData.className = 'data-list-wraper';
-        inputData.innerHTML = JSON.stringify(this.list);
-        this.selectDiv.appendChild(inputData);
         selectTxt.appendChild(this.input);
         this.selectDiv.appendChild(selectTxt);
         this.selectDiv.appendChild(selectArrow);
@@ -210,6 +206,7 @@ class SelfSelect {
             setTimeout(() => {
                 this.selectWraperALL.style.display = 'none';
                 this.selectDiv.classList.remove('is-focus');
+                this.selectDiv.querySelector('.el-input__icon').classList.remove('is-reverse');
             });
         });
     }

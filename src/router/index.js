@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import Demo from "../views/Demo.vue";
+import Demo from "../views/select.vue";
 
 Vue.use(VueRouter);
 
@@ -12,8 +12,8 @@ const routes = [
     component: Home,
   },
   {
-    path: "/demo",
-    name: "demo",
+    path: "/select",
+    name: "select",
     component: Demo,
   },
   {
